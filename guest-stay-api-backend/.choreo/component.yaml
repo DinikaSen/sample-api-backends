@@ -4,7 +4,7 @@ endpoints:
   - name: guest-stay-api
     displayName: Guest Stay API
     service:
-      basePath: /hospitality-customer/v2
+      basePath: /
       port: 8080
     type: REST
     networkVisibilities:

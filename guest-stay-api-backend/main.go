@@ -171,15 +171,12 @@ func getAvailableRoomsHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	mux := http.NewServeMux()
 
-	base := "/hospitality-customer/v2"
-
-	mux.HandleFunc("GET "+base+"/guests/{guestId}/stays/{stayId}/chargesview", getGuestFolioHandler)
-	mux.HandleFunc("POST "+base+"/guests/{guestId}/stays/{stayId}/checkout", checkoutGuestHandler)
-	mux.HandleFunc("GET "+base+"/guests/{guestId}/stays/{stayId}/rooms", getAvailableRoomsHandler)
+	mux.HandleFunc("GET /guests/{guestId}/stays/{stayId}/chargesview", getGuestFolioHandler)
+	mux.HandleFunc("POST /guests/{guestId}/stays/{stayId}/checkout", checkoutGuestHandler)
+	mux.HandleFunc("GET /guests/{guestId}/stays/{stayId}/rooms", getAvailableRoomsHandler)
 
 	addr := ":8080"
 	log.Printf("Guest Stay API mock server running on %s", addr)
-	log.Printf("Base path: %s", base)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("server error: %v", err)
 	}
