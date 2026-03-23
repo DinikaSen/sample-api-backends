@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Trip Management API
+  version: 1.0.0
+  description: APIs for managing guest trips.
+
+servers:
+  - url: /hospitality-customer/v2
+
+paths:
+  /guests/{guestId}/trips:
+    get:
+      tags: [Trips]
+      summary: Retrieve trips
+      operationId: listTrips
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - name: tripName
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of trips
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripList'
+
+    post:
+      tags: [Trips]
+      summary: Create trip
+      operationId: createTrip
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+      responses:
+        '201':
+          description: Trip created
+
+  /guests/{guestId}/trips/{tripId}:
+    get:
+      tags: [Trips]
+      summary: Retrieve trip by ID
+      operationId: getTrip
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/tripId'
+      responses:
+        '200':
+          description: Trip details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+
+    put:
+      tags: [Trips]
+      summary: Update trip
+      operationId: updateTrip
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/tripId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+      responses:
+        '204':
+          description: Updated
+
+    delete:
+      tags: [Trips]
+      summary: Delete trip
+      operationId: deleteTrip
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/tripId'
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  parameters:
+    guestId:
+      name: guestId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    tripId:
+      name: tripId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+  schemas:
+    TripList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Trip'
+
+    Trip:
+      type: object
+      properties:
+        tripId:
+          type: integer
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
