@@ -30,7 +30,7 @@ type Room struct {
 // --- Mock data ---
 
 var mockFolios = map[string]Folio{
-	"101-201": {
+	"101-101": {
 		Charges: []Charge{
 			{Description: "Room charge - Night 1", Amount: 250.00, Currency: "USD"},
 			{Description: "Room charge - Night 2", Amount: 250.00, Currency: "USD"},
@@ -39,12 +39,78 @@ var mockFolios = map[string]Folio{
 		},
 		TotalAmount: 665.50,
 	},
-	"102-202": {
+	"101-102": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 300.00, Currency: "USD"},
+			{Description: "Room service - Breakfast", Amount: 35.00, Currency: "USD"},
+			{Description: "Parking", Amount: 25.00, Currency: "USD"},
+		},
+		TotalAmount: 360.00,
+	},
+	"102-103": {
 		Charges: []Charge{
 			{Description: "Room charge - Night 1", Amount: 189.00, Currency: "USD"},
 			{Description: "Restaurant - Dinner", Amount: 78.00, Currency: "USD"},
 		},
 		TotalAmount: 267.00,
+	},
+	"102-104": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 189.00, Currency: "USD"},
+			{Description: "Room charge - Night 2", Amount: 189.00, Currency: "USD"},
+			{Description: "Laundry service", Amount: 30.00, Currency: "USD"},
+		},
+		TotalAmount: 408.00,
+	},
+	"103-105": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 349.00, Currency: "USD"},
+			{Description: "Spa service", Amount: 200.00, Currency: "USD"},
+			{Description: "Restaurant - Dinner", Amount: 95.00, Currency: "USD"},
+			{Description: "Mini bar", Amount: 60.00, Currency: "USD"},
+		},
+		TotalAmount: 704.00,
+	},
+	"103-106": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 349.00, Currency: "USD"},
+			{Description: "Room charge - Night 2", Amount: 349.00, Currency: "USD"},
+			{Description: "Gym & Wellness", Amount: 50.00, Currency: "USD"},
+		},
+		TotalAmount: 748.00,
+	},
+	"104-107": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 499.00, Currency: "USD"},
+			{Description: "Butler service", Amount: 150.00, Currency: "USD"},
+			{Description: "Restaurant - Lunch", Amount: 65.00, Currency: "USD"},
+			{Description: "Airport transfer", Amount: 80.00, Currency: "USD"},
+		},
+		TotalAmount: 794.00,
+	},
+	"104-108": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 499.00, Currency: "USD"},
+			{Description: "Room charge - Night 2", Amount: 499.00, Currency: "USD"},
+			{Description: "Spa service", Amount: 180.00, Currency: "USD"},
+		},
+		TotalAmount: 1178.00,
+	},
+	"105-109": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 220.00, Currency: "USD"},
+			{Description: "Room service - Dinner", Amount: 55.00, Currency: "USD"},
+		},
+		TotalAmount: 275.00,
+	},
+	"105-110": {
+		Charges: []Charge{
+			{Description: "Room charge - Night 1", Amount: 220.00, Currency: "USD"},
+			{Description: "Room charge - Night 2", Amount: 220.00, Currency: "USD"},
+			{Description: "Mini bar", Amount: 40.00, Currency: "USD"},
+			{Description: "Parking", Amount: 25.00, Currency: "USD"},
+		},
+		TotalAmount: 505.00,
 	},
 }
 

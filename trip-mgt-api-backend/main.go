@@ -20,16 +20,29 @@ type Trip struct {
 // --- Mock data ---
 
 var mockTrips = map[int64][]Trip{
-	1: {
+	101: {
 		{TripID: 101, Name: "Summer Vacation", StartDate: "2025-07-01", EndDate: "2025-07-10"},
 		{TripID: 102, Name: "Business Trip NYC", StartDate: "2025-08-15", EndDate: "2025-08-18"},
 	},
-	2: {
-		{TripID: 201, Name: "Anniversary Getaway", StartDate: "2025-09-05", EndDate: "2025-09-08"},
+	102: {
+		{TripID: 103, Name: "Anniversary Getaway", StartDate: "2025-09-05", EndDate: "2025-09-08"},
+		{TripID: 104, Name: "Holiday in Maldives", StartDate: "2025-12-20", EndDate: "2025-12-30"},
+	},
+	103: {
+		{TripID: 105, Name: "Conference Tokyo", StartDate: "2025-10-10", EndDate: "2025-10-14"},
+		{TripID: 106, Name: "Family Reunion", StartDate: "2025-11-25", EndDate: "2025-11-28"},
+	},
+	104: {
+		{TripID: 107, Name: "Ski Trip Aspen", StartDate: "2026-01-05", EndDate: "2026-01-10"},
+		{TripID: 108, Name: "Spring Break Miami", StartDate: "2026-03-15", EndDate: "2026-03-22"},
+	},
+	105: {
+		{TripID: 109, Name: "Honeymoon Paris", StartDate: "2025-06-10", EndDate: "2025-06-20"},
+		{TripID: 110, Name: "Wine Tour Napa", StartDate: "2025-10-01", EndDate: "2025-10-05"},
 	},
 }
 
-var nextTripID int64 = 301
+var nextTripID int64 = 111
 
 // --- Helpers ---
 
