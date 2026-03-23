@@ -1,0 +1,12 @@
+schemaVersion: 1.2
+
+endpoints:
+  - name: guest-stay-api
+    displayName: Guest Stay API
+    service:
+      basePath: /hospitality-customer/v2
+      port: 8080
+    type: REST
+    networkVisibilities:
+      - Public
+    schemaFilePath: guest-stay-management-api.yaml
