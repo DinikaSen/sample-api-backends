@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "Guest Stay API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/hospitality-customer/v2" },
+    { "key": "guestId", "value": "101" },
+    { "key": "stayId", "value": "201" }
+  ],
+  "item": [
+    {
+      "name": "Get Guest Folio",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/chargesview"
+      }
+    },
+    {
+      "name": "Checkout Guest",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/checkout"
+      }
+    },
+    {
+      "name": "Get Available Rooms",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/rooms",
+          "host": ["{{baseUrl}}"],
+          "path": ["guests", "{{guestId}}", "stays", "{{stayId}}", "rooms"]
+        }
+      }
+    },
+    {
+      "name": "Get Available Rooms (upsell)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/rooms?includeOfferTypes=upsell",
+          "host": ["{{baseUrl}}"],
+          "path": ["guests", "{{guestId}}", "stays", "{{stayId}}", "rooms"],
+          "query": [{ "key": "includeOfferTypes", "value": "upsell" }]
+        }
+      }
+    },
+    {
+      "name": "Get Available Rooms (upselldiscount)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/rooms?includeOfferTypes=upselldiscount",
+          "host": ["{{baseUrl}}"],
+          "path": ["guests", "{{guestId}}", "stays", "{{stayId}}", "rooms"],
+          "query": [{ "key": "includeOfferTypes", "value": "upselldiscount" }]
+        }
+      }
+    },
+    {
+      "name": "Get Available Rooms (smu)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/rooms?includeOfferTypes=smu",
+          "host": ["{{baseUrl}}"],
+          "path": ["guests", "{{guestId}}", "stays", "{{stayId}}", "rooms"],
+          "query": [{ "key": "includeOfferTypes", "value": "smu" }]
+        }
+      }
+    },
+    {
+      "name": "Get Available Rooms (with arrivalTime)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/guests/{{guestId}}/stays/{{stayId}}/rooms?arrivalTime=14:00",
+          "host": ["{{baseUrl}}"],
+          "path": ["guests", "{{guestId}}", "stays", "{{stayId}}", "rooms"],
+          "query": [{ "key": "arrivalTime", "value": "14:00" }]
+        }
+      }
+    }
+  ]
+}

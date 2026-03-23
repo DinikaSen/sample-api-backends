@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: Guest Stay API
+  version: 1.0.0
+  description: APIs for managing guest stays, including folio retrieval, checkout, and room availability.
+
+servers:
+  - url: /hospitality-customer/v2
+
+paths:
+  /guests/{guestId}/stays/{stayId}/chargesview:
+    get:
+      tags: [Stay]
+      summary: Retrieve guest folio
+      operationId: getGuestFolio
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/stayId'
+      responses:
+        '200':
+          description: Guest folio details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folio'
+        '404':
+          description: Not found
+
+  /guests/{guestId}/stays/{stayId}/checkout:
+    post:
+      tags: [Stay]
+      summary: Perform guest checkout
+      operationId: checkoutGuest
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/stayId'
+      responses:
+        '202':
+          description: Checkout initiated
+        '400':
+          description: Bad request
+
+  /guests/{guestId}/stays/{stayId}/rooms:
+    get:
+      tags: [Stay]
+      summary: Retrieve available rooms for stay
+      operationId: getAvailableRooms
+      parameters:
+        - $ref: '#/components/parameters/guestId'
+        - $ref: '#/components/parameters/stayId'
+        - name: includeOfferTypes
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [upsell, upselldiscount, smu]
+        - name: arrivalTime
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+      responses:
+        '200':
+          description: Available rooms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomList'
+
+components:
+  parameters:
+    guestId:
+      name: guestId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    stayId:
+      name: stayId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+  schemas:
+    Folio:
+      type: object
+      properties:
+        charges:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              amount:
+                type: number
+              currency:
+                type: string
+        totalAmount:
+          type: number
+
+    RoomList:
+      type: array
+      items:
+        type: object
+        properties:
+          roomType:
+            type: string
+          price:
+            type: number
+          currency:
+            type: string

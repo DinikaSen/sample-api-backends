@@ -1,0 +1,30 @@
+.DS_Store
+
+# Editor directories and swap files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local environment overrides
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Go build and test artifacts
+bin/
+dist/
+coverage.out
+*.coverprofile
+*.test
+
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+guest-stay-api-backend/guest-stay-api-backend
