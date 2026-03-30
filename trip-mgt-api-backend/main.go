@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 // --- Data models ---
@@ -20,29 +19,35 @@ type Trip struct {
 // --- Mock data ---
 
 var mockTrips = map[int64][]Trip{
-	101: {
-		{TripID: 101, Name: "Summer Vacation", StartDate: "2025-07-01", EndDate: "2025-07-10"},
-		{TripID: 102, Name: "Business Trip NYC", StartDate: "2025-08-15", EndDate: "2025-08-18"},
+	1: {
+		{TripID: 101, Name: "New York City Break", StartDate: "2025-08-15", EndDate: "2025-08-18"},
+		{TripID: 102, Name: "Safari Adventure Nairobi", StartDate: "2025-11-10", EndDate: "2025-11-20"},
 	},
-	102: {
-		{TripID: 103, Name: "Anniversary Getaway", StartDate: "2025-09-05", EndDate: "2025-09-08"},
-		{TripID: 104, Name: "Holiday in Maldives", StartDate: "2025-12-20", EndDate: "2025-12-30"},
+	2: {
+		{TripID: 201, Name: "Miami Beach Getaway", StartDate: "2025-09-05", EndDate: "2025-09-08"},
+		{TripID: 202, Name: "Holiday in Maldives", StartDate: "2025-12-20", EndDate: "2025-12-30"},
 	},
-	103: {
-		{TripID: 105, Name: "Conference Tokyo", StartDate: "2025-10-10", EndDate: "2025-10-14"},
-		{TripID: 106, Name: "Family Reunion", StartDate: "2025-11-25", EndDate: "2025-11-28"},
+	3: {
+		{TripID: 301, Name: "Washington DC Cultural Tour", StartDate: "2025-10-10", EndDate: "2025-10-14"},
+		{TripID: 302, Name: "Conference Tokyo", StartDate: "2026-03-05", EndDate: "2026-03-09"},
 	},
-	104: {
-		{TripID: 107, Name: "Ski Trip Aspen", StartDate: "2026-01-05", EndDate: "2026-01-10"},
-		{TripID: 108, Name: "Spring Break Miami", StartDate: "2026-03-15", EndDate: "2026-03-22"},
+	4: {
+		{TripID: 401, Name: "Miami Art Basel", StartDate: "2025-12-04", EndDate: "2025-12-08"},
+		{TripID: 402, Name: "Ski Trip Aspen", StartDate: "2026-01-05", EndDate: "2026-01-10"},
 	},
-	105: {
-		{TripID: 109, Name: "Honeymoon Paris", StartDate: "2025-06-10", EndDate: "2025-06-20"},
-		{TripID: 110, Name: "Wine Tour Napa", StartDate: "2025-10-01", EndDate: "2025-10-05"},
+	5: {
+		{TripID: 501, Name: "Washington DC Cherry Blossom", StartDate: "2026-03-28", EndDate: "2026-04-02"},
+		{TripID: 502, Name: "Honeymoon Paris", StartDate: "2025-06-10", EndDate: "2025-06-20"},
 	},
 }
 
-var nextTripID int64 = 111
+var nextTripSeq = map[int64]int64{
+	1: 3,
+	2: 3,
+	3: 3,
+	4: 3,
+	5: 3,
+}
 
 // --- Helpers ---
 
@@ -71,25 +76,11 @@ func listTripsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tripName := r.URL.Query().Get("tripName")
-	log.Printf("GET trips: guestId=%d tripName=%q", guestID, tripName)
+	log.Printf("GET trips: guestId=%d", guestID)
 
 	trips, ok := mockTrips[guestID]
 	if !ok {
 		trips = []Trip{}
-	}
-
-	if tripName != "" {
-		var filtered []Trip
-		for _, t := range trips {
-			if strings.Contains(strings.ToLower(t.Name), strings.ToLower(tripName)) {
-				filtered = append(filtered, t)
-			}
-		}
-		if filtered == nil {
-			filtered = []Trip{}
-		}
-		trips = filtered
 	}
 
 	writeJSON(w, http.StatusOK, trips)
@@ -109,8 +100,9 @@ func createTripHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trip.TripID = nextTripID
-	nextTripID++
+	seq := nextTripSeq[guestID]
+	trip.TripID = guestID*100 + seq
+	nextTripSeq[guestID] = seq + 1
 	mockTrips[guestID] = append(mockTrips[guestID], trip)
 
 	log.Printf("POST create trip: guestId=%d tripId=%d name=%q", guestID, trip.TripID, trip.Name)
@@ -168,7 +160,7 @@ func updateTripHandler(w http.ResponseWriter, r *http.Request) {
 			trips[i] = updated
 			mockTrips[guestID] = trips
 			log.Printf("PUT update trip: guestId=%d tripId=%d", guestID, tripID)
-			w.WriteHeader(http.StatusNoContent)
+			writeJSON(w, http.StatusOK, updated)
 			return
 		}
 	}

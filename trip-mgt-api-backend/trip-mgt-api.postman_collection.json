@@ -4,58 +4,44 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080" },
-    { "key": "guestId", "value": "1" },
-    { "key": "tripId", "value": "101" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "guestId",
+      "value": "1"
+    },
+    {
+      "key": "tripId",
+      "value": "101",
+      "description": "Guest 1: 101-102 | Guest 2: 201-202 | Guest 3: 301-302 | Guest 4: 401-402 | Guest 5: 501-502"
+    }
   ],
   "item": [
     {
       "name": "List Trips",
       "request": {
         "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips"]
-        }
+        "url": "{{baseUrl}}/guests/{{guestId}}/trips"
       }
     },
     {
-      "name": "List Trips (filter by name)",
+      "name": "Get Trip",
       "request": {
         "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips?tripName=Summer",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips"],
-          "query": [{ "key": "tripName", "value": "Summer" }]
-        }
+        "url": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}"
       }
     },
     {
       "name": "Create Trip",
       "request": {
         "method": "POST",
+        "url": "{{baseUrl}}/guests/{{guestId}}/trips",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Holiday Retreat\",\n  \"startDate\": \"2025-12-20\",\n  \"endDate\": \"2025-12-27\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Get Trip by ID",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips", "{{tripId}}"]
+          "raw": "{\n  \"name\": \"New Trip\",\n  \"startDate\": \"2026-05-01\",\n  \"endDate\": \"2026-05-05\"\n}"
         }
       }
     },
@@ -63,15 +49,11 @@
       "name": "Update Trip",
       "request": {
         "method": "PUT",
+        "url": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips", "{{tripId}}"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Summer Vacation (Updated)\",\n  \"startDate\": \"2025-07-05\",\n  \"endDate\": \"2025-07-15\"\n}"
+          "raw": "{\n  \"name\": \"Updated Trip\",\n  \"startDate\": \"2026-05-01\",\n  \"endDate\": \"2026-05-10\"\n}"
         }
       }
     },
@@ -79,11 +61,7 @@
       "name": "Delete Trip",
       "request": {
         "method": "DELETE",
-        "url": {
-          "raw": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["guests", "{{guestId}}", "trips", "{{tripId}}"]
-        }
+        "url": "{{baseUrl}}/guests/{{guestId}}/trips/{{tripId}}"
       }
     }
   ]
