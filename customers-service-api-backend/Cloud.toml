@@ -1,0 +1,4 @@
+[container.image]
+repository="us-central1-docker.pkg.dev/rakuten-poc-dinika/wso2-repo"
+name="customers-backend-service"
+tag="v2.4"

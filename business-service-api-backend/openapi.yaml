@@ -1,0 +1,427 @@
+openapi: 3.0.0
+info:
+  title: B2B Telecommunication Enterprise API
+  description: Enterprise management API for a B2B telecommunication company
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@telecom.com
+
+servers:
+  - url: http://localhost:8081/api/v1
+    description: Local development server
+
+paths:
+  /enterprises:
+    get:
+      summary: List all enterprises
+      description: Retrieve a list of all enterprise accounts in the system
+      operationId: listEnterprises
+      tags:
+        - Enterprises
+      responses:
+        '200':
+          description: Successfully retrieved list of enterprises
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enterprise'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create a new enterprise
+      description: Create a new enterprise account in the system
+      operationId: createEnterprise
+      tags:
+        - Enterprises
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewEnterpriseRequest'
+            example:
+              companyName: "Tech Innovations Ltd"
+              registrationNumber: "REG-123456"
+              contractType: "Gold"
+              contractStartDate: "2024-06-01"
+              contractEndDate: "2026-05-31"
+              billingAccount:
+                billingCycle: "Monthly"
+                currency: "USD"
+                creditLimit: 75000
+              activeServices:
+                - "Corporate Mobile Fleet"
+                - "IoT Connectivity"
+      responses:
+        '201':
+          description: Enterprise created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enterprise'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /enterprises/{enterpriseId}:
+    get:
+      summary: Get an enterprise by ID
+      description: Retrieve detailed information about a specific enterprise
+      operationId: getEnterprise
+      tags:
+        - Enterprises
+      parameters:
+        - name: enterpriseId
+          in: path
+          required: true
+          description: Unique identifier of the enterprise
+          schema:
+            type: string
+            example: "ENT50012"
+      responses:
+        '200':
+          description: Successfully retrieved enterprise
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enterprise'
+              example:
+                enterpriseId: "ENT50012"
+                companyName: "ABC Logistics Pvt Ltd"
+                registrationNumber: "REG-889234"
+                accountStatus: "Active"
+                contractType: "Gold"
+                contractStartDate: "2024-01-01"
+                contractEndDate: "2026-12-31"
+                billingAccount:
+                  billingCycle: "Monthly"
+                  currency: "USD"
+                  creditLimit: 50000
+                activeServices:
+                  - "Corporate Mobile Fleet"
+                  - "IoT Connectivity"
+                  - "Dedicated Fiber"
+                totalActiveSims: 842
+        '404':
+          description: Enterprise not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: "Enterprise with ID ENT50012 not found"
+                error: "NOT_FOUND"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      summary: Partially update an enterprise
+      description: Partially update an existing enterprise's information (only provided fields will be updated)
+      operationId: updateEnterprise
+      tags:
+        - Enterprises
+      parameters:
+        - name: enterpriseId
+          in: path
+          required: true
+          description: Unique identifier of the enterprise
+          schema:
+            type: string
+            example: "ENT50012"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEnterpriseRequest'
+            example:
+              accountStatus: "Active"
+              totalActiveSims: 900
+              billingAccount:
+                billingCycle: "Quarterly"
+                currency: "USD"
+                creditLimit: 60000
+      responses:
+        '200':
+          description: Enterprise updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enterprise'
+        '404':
+          description: Enterprise not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete an enterprise
+      description: Remove an enterprise from the system
+      operationId: deleteEnterprise
+      tags:
+        - Enterprises
+      parameters:
+        - name: enterpriseId
+          in: path
+          required: true
+          description: Unique identifier of the enterprise
+          schema:
+            type: string
+            example: "ENT50012"
+      responses:
+        '204':
+          description: Enterprise deleted successfully
+        '404':
+          description: Enterprise not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Enterprise:
+      type: object
+      required:
+        - enterpriseId
+        - companyName
+        - registrationNumber
+        - accountStatus
+        - contractType
+        - contractStartDate
+        - contractEndDate
+        - billingAccount
+        - activeServices
+        - totalActiveSims
+      properties:
+        enterpriseId:
+          type: string
+          description: Unique identifier for the enterprise
+          example: "ENT50012"
+        companyName:
+          type: string
+          description: Legal name of the company
+          example: "ABC Logistics Pvt Ltd"
+        registrationNumber:
+          type: string
+          description: Company registration number
+          example: "REG-889234"
+        accountStatus:
+          type: string
+          description: Current status of the enterprise account
+          enum:
+            - Active
+            - Suspended
+            - Inactive
+          example: "Active"
+        contractType:
+          type: string
+          description: Type of contract tier
+          enum:
+            - Silver
+            - Gold
+            - Platinum
+          example: "Gold"
+        contractStartDate:
+          type: string
+          format: date
+          description: Contract start date
+          example: "2024-01-01"
+        contractEndDate:
+          type: string
+          format: date
+          description: Contract end date
+          example: "2026-12-31"
+        billingAccount:
+          $ref: '#/components/schemas/BillingAccount'
+        activeServices:
+          type: array
+          description: List of active services subscribed by the enterprise
+          items:
+            type: string
+          example:
+            - "Corporate Mobile Fleet"
+            - "IoT Connectivity"
+            - "Dedicated Fiber"
+        totalActiveSims:
+          type: integer
+          description: Total number of active SIM cards
+          example: 842
+
+    BillingAccount:
+      type: object
+      required:
+        - billingCycle
+        - currency
+        - creditLimit
+      properties:
+        billingCycle:
+          type: string
+          description: Billing cycle frequency
+          enum:
+            - Monthly
+            - Quarterly
+            - Annual
+          example: "Monthly"
+        currency:
+          type: string
+          description: Currency code for billing
+          example: "USD"
+        creditLimit:
+          type: number
+          format: double
+          description: Credit limit for the enterprise account
+          example: 50000
+
+    NewEnterpriseRequest:
+      type: object
+      required:
+        - companyName
+        - registrationNumber
+        - contractType
+        - contractStartDate
+        - contractEndDate
+        - billingAccount
+        - activeServices
+      properties:
+        companyName:
+          type: string
+          description: Legal name of the company
+          example: "Tech Innovations Ltd"
+        registrationNumber:
+          type: string
+          description: Company registration number
+          example: "REG-123456"
+        contractType:
+          type: string
+          description: Type of contract tier
+          enum:
+            - Silver
+            - Gold
+            - Platinum
+          example: "Gold"
+        contractStartDate:
+          type: string
+          format: date
+          description: Contract start date
+          example: "2024-06-01"
+        contractEndDate:
+          type: string
+          format: date
+          description: Contract end date
+          example: "2026-05-31"
+        billingAccount:
+          $ref: '#/components/schemas/BillingAccount'
+        activeServices:
+          type: array
+          description: List of services to activate
+          items:
+            type: string
+          example:
+            - "Corporate Mobile Fleet"
+            - "IoT Connectivity"
+
+    UpdateEnterpriseRequest:
+      type: object
+      properties:
+        companyName:
+          type: string
+          description: Legal name of the company
+          example: "Tech Innovations Ltd"
+        registrationNumber:
+          type: string
+          description: Company registration number
+          example: "REG-123456"
+        accountStatus:
+          type: string
+          description: Current status of the enterprise account
+          enum:
+            - Active
+            - Suspended
+            - Inactive
+          example: "Active"
+        contractType:
+          type: string
+          description: Type of contract tier
+          enum:
+            - Silver
+            - Gold
+            - Platinum
+          example: "Gold"
+        contractStartDate:
+          type: string
+          format: date
+          description: Contract start date
+          example: "2024-06-01"
+        contractEndDate:
+          type: string
+          format: date
+          description: Contract end date
+          example: "2026-05-31"
+        billingAccount:
+          $ref: '#/components/schemas/BillingAccount'
+        activeServices:
+          type: array
+          description: List of active services
+          items:
+            type: string
+          example:
+            - "Corporate Mobile Fleet"
+            - "IoT Connectivity"
+        totalActiveSims:
+          type: integer
+          description: Total number of active SIM cards
+          example: 900
+
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Enterprise with ID ENT50012 not found"
+        error:
+          type: string
+          description: Error code
+          example: "NOT_FOUND"
+
+tags:
+  - name: Enterprises
+    description: Enterprise account management operations

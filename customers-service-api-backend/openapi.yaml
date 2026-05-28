@@ -1,0 +1,397 @@
+openapi: 3.0.0
+info:
+  title: B2C Telecommunication Customer API
+  description: Customer management API for a B2C telecommunication company
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@telecom.com
+
+servers:
+  - url: http://localhost:8081/api/v1
+    description: Local development server
+
+paths:
+  /customers:
+    get:
+      summary: List all customers
+      description: Retrieve a list of all customers in the system
+      operationId: listCustomers
+      tags:
+        - Customers
+      responses:
+        '200':
+          description: Successfully retrieved list of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create a new customer
+      description: Create a new customer account in the system
+      operationId: createCustomer
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCustomerRequest'
+            example:
+              msisdn: "011888899999"
+              firstName: "Jane"
+              lastName: "Doe"
+              email: "jane.doe@email.com"
+              accountType: "Prepaid"
+              currentPlan:
+                planName: "Basic 4G"
+                monthlyFee: 15.00
+                currency: "USD"
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /customers/{customerId}:
+    get:
+      summary: Get a customer by ID
+      description: Retrieve detailed information about a specific customer
+      operationId: getCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: string
+            example: "CUST100245"
+      responses:
+        '200':
+          description: Successfully retrieved customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              example:
+                customerId: "CUST100245"
+                msisdn: "011222233232"
+                firstName: "John"
+                lastName: "Smith"
+                email: "john.smith@email.com"
+                accountType: "Prepaid"
+                status: "Active"
+                currentPlan:
+                  planName: "Unlimited 4G Plus"
+                  monthlyFee: 25.00
+                  currency: "USD"
+                balance:
+                  availableCredit: 12.50
+                  dataRemainingGB: 4.2
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: "Customer with ID CUST100245 not found"
+                error: "NOT_FOUND"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      summary: Partially update a customer
+      description: Partially update an existing customer's information (only provided fields will be updated)
+      operationId: updateCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: string
+            example: "CUST100245"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+            example:
+              email: "john.smith.updated@email.com"
+              status: "Active"
+              balance:
+                availableCredit: 20.00
+                dataRemainingGB: 5.5
+      responses:
+        '200':
+          description: Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete a customer
+      description: Remove a customer from the system
+      operationId: deleteCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: string
+            example: "CUST100245"
+      responses:
+        '204':
+          description: Customer deleted successfully
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Customer:
+      type: object
+      required:
+        - customerId
+        - msisdn
+        - firstName
+        - lastName
+        - email
+        - accountType
+        - status
+        - currentPlan
+        - balance
+      properties:
+        customerId:
+          type: string
+          description: Unique identifier for the customer
+          example: "CUST100245"
+        msisdn:
+          type: string
+          description: Mobile Station International Subscriber Directory Number
+          example: "011222233232"
+        firstName:
+          type: string
+          description: Customer's first name
+          example: "John"
+        lastName:
+          type: string
+          description: Customer's last name
+          example: "Smith"
+        email:
+          type: string
+          format: email
+          description: Customer's email address
+          example: "john.smith@email.com"
+        accountType:
+          type: string
+          description: Type of customer account
+          enum:
+            - Prepaid
+            - Postpaid
+          example: "Prepaid"
+        status:
+          type: string
+          description: Current status of the customer account
+          enum:
+            - Active
+            - Suspended
+            - Inactive
+          example: "Active"
+        currentPlan:
+          $ref: '#/components/schemas/CustomerPlan'
+        balance:
+          $ref: '#/components/schemas/CustomerBalance'
+
+    CustomerPlan:
+      type: object
+      required:
+        - planName
+        - monthlyFee
+        - currency
+      properties:
+        planName:
+          type: string
+          description: Name of the customer's current plan
+          example: "Unlimited 4G Plus"
+        monthlyFee:
+          type: number
+          format: double
+          description: Monthly fee for the plan
+          example: 25.00
+        currency:
+          type: string
+          description: Currency code for the monthly fee
+          example: "USD"
+
+    CustomerBalance:
+      type: object
+      required:
+        - availableCredit
+        - dataRemainingGB
+      properties:
+        availableCredit:
+          type: number
+          format: double
+          description: Available credit balance for prepaid accounts
+          example: 12.50
+        dataRemainingGB:
+          type: number
+          format: double
+          description: Remaining data allowance in gigabytes
+          example: 4.2
+
+    NewCustomerRequest:
+      type: object
+      required:
+        - msisdn
+        - firstName
+        - lastName
+        - email
+        - accountType
+        - currentPlan
+      properties:
+        msisdn:
+          type: string
+          description: Mobile Station International Subscriber Directory Number
+          example: "011888899999"
+        firstName:
+          type: string
+          description: Customer's first name
+          example: "Jane"
+        lastName:
+          type: string
+          description: Customer's last name
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          description: Customer's email address
+          example: "jane.doe@email.com"
+        accountType:
+          type: string
+          description: Type of customer account
+          enum:
+            - Prepaid
+            - Postpaid
+          example: "Prepaid"
+        currentPlan:
+          $ref: '#/components/schemas/CustomerPlan'
+
+    UpdateCustomerRequest:
+      type: object
+      properties:
+        msisdn:
+          type: string
+          description: Mobile Station International Subscriber Directory Number
+          example: "011888899999"
+        firstName:
+          type: string
+          description: Customer's first name
+          example: "Jane"
+        lastName:
+          type: string
+          description: Customer's last name
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          description: Customer's email address
+          example: "jane.doe@email.com"
+        accountType:
+          type: string
+          description: Type of customer account
+          enum:
+            - Prepaid
+            - Postpaid
+          example: "Prepaid"
+        status:
+          type: string
+          description: Current status of the customer account
+          enum:
+            - Active
+            - Suspended
+            - Inactive
+          example: "Active"
+        currentPlan:
+          $ref: '#/components/schemas/CustomerPlan'
+        balance:
+          $ref: '#/components/schemas/CustomerBalance'
+
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Customer with ID CUST100245 not found"
+        error:
+          type: string
+          description: Error code
+          example: "NOT_FOUND"
+
+tags:
+  - name: Customers
+    description: Customer management operations
