@@ -1,0 +1,12 @@
+schemaVersion: 1.2
+
+endpoints:
+  - name: mock-backend-quantis
+    displayName: mock-backend-quantis
+    service:
+      basePath: /inventory
+      port: 8083
+    type: REST
+    networkVisibilities:
+      - Public
+    schemaFilePath: openapi.yaml

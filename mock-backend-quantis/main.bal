@@ -8,8 +8,8 @@ type ProductResponse record {|
     string org;
 |};
 
-service / on new http:Listener(8083) {
-    resource function get inventory/products(string productId) returns ProductResponse {
+service /inventory on new http:Listener(8083) {
+    resource function get products(string productId) returns ProductResponse {
         return {
             productId: productId,
             name: "Sample Product",

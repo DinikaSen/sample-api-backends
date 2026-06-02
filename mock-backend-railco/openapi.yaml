@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: Mock Backend Railco Inventory API
+  version: 1.0.0
+  description: OpenAPI specification for the mock Railco inventory backend.
+servers:
+  - url: /
+paths:
+  /products:
+    get:
+      operationId: getProductById
+      summary: Get product details by product ID
+      parameters:
+        - in: query
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: Product identifier.
+      responses:
+        "200":
+          description: Product details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+components:
+  schemas:
+    ProductResponse:
+      type: object
+      required:
+        - productId
+        - name
+        - category
+        - price
+        - org
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+          format: double
+        org:
+          type: string
