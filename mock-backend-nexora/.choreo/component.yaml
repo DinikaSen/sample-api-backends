@@ -1,0 +1,11 @@
+schemaVersion: 1.2
+
+endpoints:
+  - name: mock-backend-nexora
+    displayName: mock-backend-nexora
+    service:
+      basePath: /inventory
+      port: 8083
+    type: REST
+    networkVisibilities:
+      - Public
