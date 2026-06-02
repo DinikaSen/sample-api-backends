@@ -6,7 +6,7 @@ info:
 servers:
   - url: /
 paths:
-  /products:
+  /inventory/products:
     get:
       operationId: getProductById
       summary: Get product details by product ID
