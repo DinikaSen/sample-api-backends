@@ -1,14 +1,21 @@
 import ballerina/http;
 
-listener http:Listener httpListener = check new http:Listener(8082);
-
-type OrgResponse record {
+type ProductResponse record {|
+    string productId;
+    string name;
+    string category;
+    decimal price;
     string org;
-};
+|};
 
-service /nexora on httpListener {
-
-    resource function get .() returns OrgResponse {
-        return {org: "nexora"};
+service /inventory on new http:Listener(8083) {
+    resource function get products(string productId) returns ProductResponse {
+        return {
+            productId: productId,
+            name: "Sample Product",
+            category: "Furniture",
+            price: 199.98,
+            org: "nexora"
+        };
     }
 }

@@ -1,7 +1,21 @@
 import ballerina/http;
 
-service /railco on new http:Listener(8080) {
-    resource function get .() returns record {|string org;|} {
-        return {org: "railco"};
+type ProductResponse record {|
+    string productId;
+    string name;
+    string category;
+    decimal price;
+    string org;
+|};
+
+service /inventory on new http:Listener(8083) {
+    resource function get products(string productId) returns ProductResponse {
+        return {
+            productId: productId,
+            name: "Sample Product",
+            category: "Tools",
+            price: 16.99,
+            org: "railco"
+        };
     }
 }
